@@ -1,0 +1,10 @@
+
+1、新建一个文件夹存放安装包
+mkdir api-packages
+2、 将当前环境现有的python包导出到目录文件requestments.txt中
+pip freeze > requestments.txt
+3、按照导出目录下载对应安装包
+pip download -d ./api-packages -r requestments.txt
+4、复制api-packages和requirments.txt至新环境的根目录下
+5、执行命令安装上述安装包
+pip install --no-index --find-links=./api-packages -r ./requestments.txt
