@@ -1,46 +1,38 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-#__title__ = ''
-#__author__ = 'xuepl'
-#__mtime__ = '2019/9/14'
-
 from tools import os_tool
-
-
-
+import os
 ############################
 # 初始化工程目录
 ############################
 root_path = os_tool.get_root_path()
-config_path = root_path + 'config'
-test_case_path = root_path + 'test_case'
-data_path = root_path + 'data'
-log_path = root_path + 'logs'
-tools_path = root_path + 'tools'
-def init_dirs():
-    # 工程根目录
-    # 配置文件夹
-    os_tool.mkdir(config_path)
-    os_tool.mkfile(config_path,'__init__.py')
 
-    # 测试用例文件夹
+    
+os_tool.mkdir(os.path.join(root_path,*['./', 'config']))
+content = """import os
 
-    os_tool.mkdir(test_case_path)
-    os_tool.mkfile(test_case_path, '__init__.py')
+# GY_API_URL = 'http://api.yansl.com:8084'
+GY_API_URL = 'http://qa.yansl.com:8080'
+GY_DB_URL = {                               
+    'host': 'qa.guoyasoft.com',             
+    'port': 3306,                           
+    'db': 'guoya_virtual_mall_1811',        
+    'user': 'root',
+    'passwd': 'Guoya006',                   
+    'charset': 'utf8'                       
+}
+ROOT_PATH = os.path.join(os.path.dirname(__file__),'..')
+    """
+os_tool.mkfile(root_path,*['./', 'config', 'conf.py'], content=content)
 
-    # 测试数据文件夹
-    os_tool.mkdir(data_path)
+        
+content = """"""
+os_tool.mkfile(root_path,*['./', 'config', '__init__.py'], content=content)
 
-    # 日志文件夹
-    os_tool.mkdir(log_path)
-    # 工具文件夹
-    os_tool.mkdir(tools_path)
-    os_tool.mkfile(tools_path,'__init__.py')
-    # 生成测试数据文件
-    # 创建make_test_data.py
-    content = """
-#!/usr/bin/env python
+        
+os_tool.mkdir(os.path.join(root_path,*['./', 'data']))
+os_tool.mkdir(os.path.join(root_path,*['./', 'logs']))
+content = """#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 #__title__ = ''
@@ -51,32 +43,30 @@ import os
 
 import  yaml
 
-from config.conf import FILE_PATH
+from config.conf import  ROOT_PATH
 
 POST = 1
 GET = 0
-
-mode_name = "登录流程"
-test_case = "修改密码"
+feature = None # 功能
+story=None  # 故事
+title=None  # 标题
 method = POST
-url = "/user/changepwd" #接口地址
-data = None
-files=None
-params = None
-status_code = 200
-headers = {"token":"${token}"}
-expect = "2000"
-#json path，参数类型为列表
-json_path = [{"token":'$.data.token'}]
-#注意数据格式为字典或者为json串 为空写None
+url = "/admin/login" #接口地址
+headers = None #请求头
+params = None # get请求数据
+data = None # post请求键值对数据
+# post请求json数据，注意数据格式为字典或者为json串 为空写None
 json_data = '''
 {
-  "phone": "string",
-  "pwd": "string",
-  "rePwd": "string",
-  "userName": "string"
+  "password": "123456",
+  "username": "admin"
 }
 '''
+files = None # post请求，上传文件
+status_code = 200 #响应状态码
+expect = "200" # 预期结果
+#json path，参数类型为列表 根据jsonpath提取响应正文中的数据
+json_path = [{"token":'$.data.token'}]
 
 
 
@@ -96,32 +86,37 @@ json_data = '''
 
 
 
+def mk_data():
+    json_data1=None
+    if(isinstance(json_data,str)):
+        json_data1 = json.loads(json_data)
 
-if(isinstance(json_data,str)):
-    json_data = json.loads(json_data)
+    d = [{
+        "method":method,
+        "url":url,
+        "data":data,
+        "params":params,
+        "json":json_data1,
+        "status_code":status_code,
+        "expect":expect,
+        "headers":headers,
+        "json_path":json_path,
+        "feature": feature,
+        "story": story,
+        "title":title,
+        "files": files
+    }]
+    with open(os.path.join(ROOT_PATH,"data","test_{}_{}.yaml".format("" if feature == None else feature,"" if story == None else story)),'a',encoding='utf-8') as f:
+        yaml.safe_dump(d,f,encoding='utf-8',default_flow_style=False,allow_unicode=True)
+        f.write("\\n")
 
-d = [{
-    "test_case":test_case,
-    "method":method,
-    "url":url,
-    "data":data,
-    "params":params,
-    "json":json_data,
-    "status_code":status_code,
-    "expect":expect,
-    "headers":headers,
-    "json_path":json_path,
-    "files": files
-}]
-with open(os.path.join(FILE_PATH,"test_{}.yaml".format(mode_name)),'a',encoding='utf-8') as f:
-    yaml.safe_dump(d,f,encoding='utf-8',default_flow_style=False,allow_unicode=True)
-    f.write("\\n")
-"""
-    os_tool.mkfile(root_path, "make_test_data.py", content=content)
 
-    # 创建run.py
-    content = '''
-# -*- coding:utf-8 -*-
+if __name__ == '__main__':
+    mk_data()"""
+os_tool.mkfile(root_path,*['./', 'make_test_data.py'], content=content)
+
+        
+content = """# -*- coding:utf-8 -*-
 from tools import shell_tool
 import pytest                                                                              
                                                                                            
@@ -138,73 +133,58 @@ if __name__ == '__main__':
                                                                                            
     shell_tool.invoke(cmd1)
 
-'''
-    os_tool.mkfile(root_path, "run.py", content=content)
+"""
+os_tool.mkfile(root_path,*['./', 'run.py'], content=content)
 
-def init_config():
-    content = """
-import os
-
-GY_API_URL = 'http://api.yansl.com:8084'
-
-GY_DB_URL = {                               
-    'host': 'qa.guoyasoft.com',             
-    'port': 3306,                           
-    'db': 'guoya_virtual_mall_1811',        
-    'user': 'root',
-    'passwd': 'Guoya006',                   
-    'charset': 'utf8'                       
-}
-FILE_PATH = os.path.join(os.path.dirname(__file__), "../data")
-    """
-    os_tool.mkfile(config_path,'conf.py',content=content)
-
-def init_test_case():
-    content = """
-import pytest
+        
+os_tool.mkdir(os.path.join(root_path,*['./', 'test_case']))
+content = """import pytest
                                                        
 @pytest.fixture(scope='session')                            
 def data():
     data = {}
     return data                                             
 """
-    os_tool.mkfile(test_case_path,"conftest.py",content=content)
-    content="""
-import os
+os_tool.mkfile(root_path,*['./', 'test_case', 'conftest.py'], content=content)
+
+        
+content = """import os
 
 import allure
 import pytest
 
-from config.conf import FILE_PATH
+from config.conf import ROOT_PATH
 from tools.get_data import get_datas
 from tools.request_tamp import request_tamp
+from tools.string_tool import is_empty
 
-data = get_datas(os.path.join(os.path.dirname(__file__),"../data"))
+data = get_datas(os.path.join(ROOT_PATH,"data"))
 @pytest.mark.parametrize("d",data[1],ids=data[0])
-@allure.epic("用户模块流程")
-@allure.feature("测试一下")
-@allure.story("测试一下")
 def test_run(data,d):
     request_tamp(d,data)"""
-    os_tool.mkfile(test_case_path,"test_run.py",content=content)
-def init_tools():
-    # 创建assert_tool.py
-    content = '''
-"""
+os_tool.mkfile(root_path,*['./', 'test_case', 'test_run.py'], content=content)
+
+        
+content = """"""
+os_tool.mkfile(root_path,*['./', 'test_case', '__init__.py'], content=content)
+
+        
+os_tool.mkdir(os.path.join(root_path,*['./', 'tools']))
+content = """'''
 封装Assert方法
 
-"""
+'''
 from tools import log_tool
 import json
 
 
 def assert_in(body, expected_msg):
-    """
+    '''
     验证response body中是否包含预期字符串
     :param body:
     :param expected_msg:
     :return:
-    """
+    '''
     try:
         text = json.dumps(body, ensure_ascii=False)
         # print(text)
@@ -217,12 +197,12 @@ def assert_in(body, expected_msg):
 
 
 def assert_equal(body, expected_msg):
-    """
+    '''
     验证response body中是否等于预期字符串
     :param body:
     :param expected_msg:
     :return:
-    """
+    '''
     try:
         assert body == expected_msg
         return True
@@ -232,12 +212,12 @@ def assert_equal(body, expected_msg):
 
 
 def assert_time(time, expected_time):
-    """
+    '''
     验证response body响应时间小于预期最大响应时间,单位：毫秒
     :param body:
     :param expected_time:
     :return:
-    """
+    '''
     try:
         assert time < expected_time
         return True
@@ -248,11 +228,11 @@ def assert_time(time, expected_time):
 
 
 def assert_not_null(actual):
-    """
+    '''
             验证实际结果不为null
             :param actual:
             :return:
-            """
+            '''
     try:
         assert actual != ''
         return True
@@ -260,14 +240,13 @@ def assert_not_null(actual):
     except:
         log_tool.error("预期不为空，实际结果为空")
         raise
-'''
-    os_tool.mkfile(tools_path, "assert_tool.py", content=content)
+"""
+os_tool.mkfile(root_path,*['./', 'tools', 'assert_tool.py'], content=content)
 
-    # 创建decorators_tool.py
-    content = '''
-"""
+        
+content = """'''
 常用装饰器
-"""
+'''
 import allure
 from tools import log_tool
 from tools import string_tool
@@ -288,13 +267,11 @@ def logs(func):
         allure.attach(response, '响应', allure.attachment_type.TEXT)
         return r
 
-    return _func'''
-    os_tool.mkfile(tools_path, "decorators_tool.py", content=content)
+    return _func"""
+os_tool.mkfile(root_path,*['./', 'tools', 'decorators_tool.py'], content=content)
 
-
-    # 创建get_data.py
-    content = '''
-#!/usr/bin/env python
+        
+content = """#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 #__title__ = ''
@@ -333,12 +310,11 @@ def get_datas(dir_path):
 
 
 
-'''
-    os_tool.mkfile(tools_path, "get_data.py", content=content)
+"""
+os_tool.mkfile(root_path,*['./', 'tools', 'get_data.py'], content=content)
 
-    # 创建json_path_tool.py
-    content = '''
-#!/usr/bin/env python
+        
+content = """#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 #__title__ = ''
@@ -473,18 +449,16 @@ def index_dic(d,data):
                 index_dic(d[i], data)
     else:
         pass
-    return d'''
-    os_tool.mkfile(tools_path, "json_path_tool.py", content=content)
+    return d"""
+os_tool.mkfile(root_path,*['./', 'tools', 'json_path_tool.py'], content=content)
 
-
-    # 创建log_tool.py
-    content = '''
-import logging
+        
+content = """import logging
 from logging.handlers import TimedRotatingFileHandler
 from tools import os_tool
-"""
+'''
 封装log方法
-"""
+'''
 logger = logging.getLogger(__name__)
 logger.setLevel(level=logging.INFO)
 root_path = os_tool.get_root_path()+'logs/'
@@ -529,13 +503,11 @@ def error(msg):
 def critical(msg):
     logger.critical(msg)
 
-'''
-    os_tool.mkfile(tools_path, "log_tool.py", content=content)
+"""
+os_tool.mkfile(root_path,*['./', 'tools', 'log_tool.py'], content=content)
 
-
-    # 创建make_info.py
-    content = """
-#! /usr/bin/env python
+        
+content = """#! /usr/bin/env python
 # -*- coding: utf-8 -*-
 import datetime
 import random
@@ -626,11 +598,10 @@ def make_info():
 
 
 """
-    os_tool.mkfile(tools_path, "make_info.py", content=content)
+os_tool.mkfile(root_path,*['./', 'tools', 'make_info.py'], content=content)
 
-    # 创建md5_tool.py
-    content = '''
-# -*- coding:utf-8 -*-
+        
+content = """# -*- coding:utf-8 -*-
 # Author : 小吴老师
 # Data ：2019/7/21 14:53
 import hashlib
@@ -642,12 +613,11 @@ def md5_passwd(str,key='123456'):
     md.update(str.encode())
     res = md.hexdigest()
     return res
-'''
-    os_tool.mkfile(tools_path, "md5_tool.py", content=content)
+"""
+os_tool.mkfile(root_path,*['./', 'tools', 'md5_tool.py'], content=content)
 
-    # 创建mysql_tool.py
-    content = '''
-#! /usr/bin/env python
+        
+content = """#! /usr/bin/env python
 # -*- coding: utf-8 -*-
 import json
 
@@ -718,12 +688,11 @@ if __name__=='__main__':
 
 
 
-'''
-    os_tool.mkfile(tools_path, "mysql_tool.py", content=content)
+"""
+os_tool.mkfile(root_path,*['./', 'tools', 'mysql_tool.py'], content=content)
 
-    # 创建os_tool.py
-    content = '''
-# -*- coding:utf-8 -*-
+        
+content = """# -*- coding:utf-8 -*-
 import os
 import shutil
 import stat
@@ -799,12 +768,11 @@ def copy_file(src_file,target_dir):
     shutil.copy(src_file,target_dir)
 
 if __name__ == '__main__':
-    mkfile("E:\\softwaredata\\python\\gy-api-tool",'config','test.py')'''
-    os_tool.mkfile(tools_path, "os_tool.py", content=content)
+    mkfile("E:\\softwaredata\\python\\gy-api-tool",'config','test.py')"""
+os_tool.mkfile(root_path,*['./', 'tools', 'os_tool.py'], content=content)
 
-    # 创建random_tool.py
-    content = """
-    
+        
+content = """    
 # -*- coding:utf-8 -*-
 
 
@@ -1068,12 +1036,10 @@ def random_gbk_chines():
     return str
 
 """
-    os_tool.mkfile(tools_path, "random_tool.py", content=content)
+os_tool.mkfile(root_path,*['./', 'tools', 'random_tool.py'], content=content)
 
-
-    # 创建request_tamp.py
-    content = '''
-#!/usr/bin/env python
+        
+content = """#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 #__title__ = ''
@@ -1091,19 +1057,31 @@ import allure
 # 项目根目录建config包，里面建conf.py文件，用于配置
 from config import conf
 from tools.json_path_tool import *
+from tools.string_tool import is_empty
 
 
 def request_tamp(d,data):
+    feature = d.pop("feature")
+    if not is_empty(feature):
+        print(feature)
+        allure.dynamic.feature(feature)
+    story = d.pop("story")
+    if not is_empty(story):
+        print(story)
+        allure.dynamic.story(story)
+    title = d.pop("title")
+    if not is_empty(title):
+        print(title)
+        allure.dynamic.title(title)
     status_code = d.pop("status_code")
-    expect = d.pop("expect")
     method = d.pop("method")
-    resp = None
     json_path = d.pop("json_path")
     d["url"] = conf.GY_API_URL + d["url"]
     try:
         index_dic(d,data)
     except:
         pass
+    expect = d.pop("expect")
     if(method==1):
         resp = request_tool.post_request(**d)
     else:
@@ -1119,14 +1097,13 @@ def request_tamp(d,data):
     assert_tool.assert_equal(resp.status_code, status_code)
     # 自定义断言
     allure.attach("预期结果：{}，实际结果：{}".format(expect, resp.text), "响应正文断言", allure.attachment_type.TEXT)
-    assert_tool.assert_in(resp.text, expect)'''
-    os_tool.mkfile(tools_path, "request_tamp.py", content=content)
+    assert_tool.assert_in(resp.text, expect)"""
+os_tool.mkfile(root_path,*['./', 'tools', 'request_tamp.py'], content=content)
 
-    # 创建request_tool.py
-    content = '''
-"""
+        
+content = """'''
 封装request
-"""
+'''
 
 import requests
 from tools import log_tool
@@ -1135,13 +1112,13 @@ import time
 
 @logs
 def get_request(url, params=None, headers=None, cookies=None):
-    """
+    '''
     Get请求
     :param url:
     :param data:
     :param header:
     :return:
-    """
+    '''
 
     if not (url.startswith('http://') or url.startswith('https://')):
         url = '%s%s' % ('http://', url)
@@ -1167,13 +1144,13 @@ def get_request(url, params=None, headers=None, cookies=None):
 
 @logs
 def post_request(url, data=None,files=None, params=None, headers=None, json=None, cookies=None):
-    """
+    '''
     Post请求
     :param url:
     :param data:
     :param header:
     :return:
-    """
+    '''
     if not (url.startswith('http://') or url.startswith('https://')):
         url = '%s%s' % ('http://', url)
         print(url)
@@ -1199,7 +1176,7 @@ def post_request(url, data=None,files=None, params=None, headers=None, json=None
 
 @logs
 def post_request_multipart(url, files=None, headers=None, cookies=None):
-    """
+    '''
     提交Multipart/form-data 格式的Post请求
     :param url:
     :param data:
@@ -1208,7 +1185,7 @@ def post_request_multipart(url, files=None, headers=None, cookies=None):
     :param file:
     :param type:
     :return:
-    """
+    '''
     if not (url.startswith('http://') or url.startswith('https://')):
         url = '%s%s' % ('http://', url)
         print(url)
@@ -1222,13 +1199,13 @@ def post_request_multipart(url, files=None, headers=None, cookies=None):
 
 @logs
 def put_request(url, data, header=None, cookies=None):
-    """
+    '''
     Put请求
     :param url:
     :param data:
     :param header:
     :return:
-    """
+    '''
     if not (url.startswith('http://') or url.startswith('https://')):
         url = '%s%s' % ('http://', url)
         log_tool.debug(url)
@@ -1284,14 +1261,13 @@ def copy_github_file(url,save_name):
     resp = get_request(url)
     body = resp.text
     with open(save_name, 'w', encoding='utf-8') as file:
-        file.write(body)'''
-    os_tool.mkfile(tools_path, "request_tool.py", content=content)
+        file.write(body)"""
+os_tool.mkfile(root_path,*['./', 'tools', 'request_tool.py'], content=content)
 
-    # 创建shell_tool.py
-    content = '''
-"""
+        
+content = """'''
 封装执行shell语句方法
-"""
+'''
 
 import subprocess
 from tools import log_tool
@@ -1309,12 +1285,11 @@ def invoke(cmd):
         raise
 
     
-'''
-    os_tool.mkfile(tools_path, "shell_tool.py", content=content)
+"""
+os_tool.mkfile(root_path,*['./', 'tools', 'shell_tool.py'], content=content)
 
-    # 创建string_tool.py
-    content = '''
-# -*- coding:utf-8 -*-
+        
+content = """# -*- coding:utf-8 -*-
 
 
 # 字典转字符串
@@ -1322,13 +1297,18 @@ def dic_to_str(dic):
     s = ''
     for key in dic:
         s+="{0}: {1}\\n".format(key,dic[key])
-    return s    
-'''
-    os_tool.mkfile(tools_path, "string_tool.py", content=content)
+    return s
 
-    # 创建yaml_tools.py
-    content = '''
-#!/usr/bin/env python
+def is_empty(a):
+    if not a :
+        return True
+    elif(len(a)==0):
+        return True
+    return False"""
+os_tool.mkfile(root_path,*['./', 'tools', 'string_tool.py'], content=content)
+
+        
+content = """#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 #__title__ = ''
@@ -1344,15 +1324,11 @@ def read_yaml(file_path):
         cont=cont.decode('utf8')
         d = yaml.safe_load(cont)
     return d
-'''
-    os_tool.mkfile(tools_path, "yaml_tools.py", content=content)
+"""
+os_tool.mkfile(root_path,*['./', 'tools', 'yaml_tools.py'], content=content)
 
+        
+content = """"""
+os_tool.mkfile(root_path,*['./', 'tools', '__init__.py'], content=content)
 
-def init_project():
-    init_dirs()
-    init_test_case()
-    init_config()
-    init_tools()
-
-if __name__ == '__main__':
-    init_project()
+        
