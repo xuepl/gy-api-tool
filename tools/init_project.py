@@ -9,7 +9,8 @@ root_path = os_tool.get_root_path()
 
     
 os_tool.mkdir(os.path.join(root_path,*['./', 'config']))
-content = """import os
+content = """
+import os
 
 # GY_API_URL = 'http://api.yansl.com:8084'
 GY_API_URL = 'http://qa.yansl.com:8080'
@@ -32,7 +33,8 @@ os_tool.mkfile(root_path,*['./', 'config', '__init__.py'], content=content)
         
 os_tool.mkdir(os.path.join(root_path,*['./', 'data']))
 os_tool.mkdir(os.path.join(root_path,*['./', 'logs']))
-content = """#!/usr/bin/env python
+content = """
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 #__title__ = ''
@@ -116,7 +118,8 @@ if __name__ == '__main__':
 os_tool.mkfile(root_path,*['./', 'make_test_data.py'], content=content)
 
         
-content = """# -*- coding:utf-8 -*-
+content = """
+# -*- coding:utf-8 -*-
 from tools import shell_tool
 import pytest                                                                              
                                                                                            
@@ -138,7 +141,8 @@ os_tool.mkfile(root_path,*['./', 'run.py'], content=content)
 
         
 os_tool.mkdir(os.path.join(root_path,*['./', 'test_case']))
-content = """import pytest
+content = """
+import pytest
                                                        
 @pytest.fixture(scope='session')                            
 def data():
@@ -148,7 +152,8 @@ def data():
 os_tool.mkfile(root_path,*['./', 'test_case', 'conftest.py'], content=content)
 
         
-content = """import os
+content = """
+import os
 
 import allure
 import pytest
@@ -170,7 +175,8 @@ os_tool.mkfile(root_path,*['./', 'test_case', '__init__.py'], content=content)
 
         
 os_tool.mkdir(os.path.join(root_path,*['./', 'tools']))
-content = """'''
+content = """
+'''
 封装Assert方法
 
 '''
@@ -244,7 +250,8 @@ def assert_not_null(actual):
 os_tool.mkfile(root_path,*['./', 'tools', 'assert_tool.py'], content=content)
 
         
-content = """'''
+content = """
+'''
 常用装饰器
 '''
 import allure
@@ -271,7 +278,8 @@ def logs(func):
 os_tool.mkfile(root_path,*['./', 'tools', 'decorators_tool.py'], content=content)
 
         
-content = """#!/usr/bin/env python
+content = """
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 #__title__ = ''
@@ -293,13 +301,13 @@ def get_datas(dir_path):
             file_path = os.path.join(data_dir,d)
             yaml_datas = read_yaml(file_path)
             for data in yaml_datas:
-                ids.append(data.pop("test_case"))
+                ids.append(data['title'])
                 datas.append(data)
     elif(os.path.isfile(dir_path)):
         if dir_path.endswith(".yaml"):
             yaml_datas = read_yaml(dir_path)
             for data in yaml_datas:
-                ids.append(data.pop("test_case"))
+                ids.append(data['title'])
                 datas.append(data)
         else:
             print(dir_path)
@@ -314,7 +322,8 @@ def get_datas(dir_path):
 os_tool.mkfile(root_path,*['./', 'tools', 'get_data.py'], content=content)
 
         
-content = """#!/usr/bin/env python
+content = """
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 #__title__ = ''
@@ -453,7 +462,8 @@ def index_dic(d,data):
 os_tool.mkfile(root_path,*['./', 'tools', 'json_path_tool.py'], content=content)
 
         
-content = """import logging
+content = """
+import logging
 from logging.handlers import TimedRotatingFileHandler
 from tools import os_tool
 '''
@@ -507,7 +517,8 @@ def critical(msg):
 os_tool.mkfile(root_path,*['./', 'tools', 'log_tool.py'], content=content)
 
         
-content = """#! /usr/bin/env python
+content = """
+#! /usr/bin/env python
 # -*- coding: utf-8 -*-
 import datetime
 import random
@@ -601,7 +612,8 @@ def make_info():
 os_tool.mkfile(root_path,*['./', 'tools', 'make_info.py'], content=content)
 
         
-content = """# -*- coding:utf-8 -*-
+content = """
+# -*- coding:utf-8 -*-
 # Author : 小吴老师
 # Data ：2019/7/21 14:53
 import hashlib
@@ -617,7 +629,8 @@ def md5_passwd(str,key='123456'):
 os_tool.mkfile(root_path,*['./', 'tools', 'md5_tool.py'], content=content)
 
         
-content = """#! /usr/bin/env python
+content = """
+#! /usr/bin/env python
 # -*- coding: utf-8 -*-
 import json
 
@@ -692,7 +705,8 @@ if __name__=='__main__':
 os_tool.mkfile(root_path,*['./', 'tools', 'mysql_tool.py'], content=content)
 
         
-content = """# -*- coding:utf-8 -*-
+content = """
+# -*- coding:utf-8 -*-
 import os
 import shutil
 import stat
@@ -772,7 +786,8 @@ if __name__ == '__main__':
 os_tool.mkfile(root_path,*['./', 'tools', 'os_tool.py'], content=content)
 
         
-content = """    
+content = """
+    
 # -*- coding:utf-8 -*-
 
 
@@ -1039,7 +1054,8 @@ def random_gbk_chines():
 os_tool.mkfile(root_path,*['./', 'tools', 'random_tool.py'], content=content)
 
         
-content = """#!/usr/bin/env python
+content = """
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 #__title__ = ''
@@ -1101,7 +1117,8 @@ def request_tamp(d,data):
 os_tool.mkfile(root_path,*['./', 'tools', 'request_tamp.py'], content=content)
 
         
-content = """'''
+content = """
+'''
 封装request
 '''
 
@@ -1265,7 +1282,8 @@ def copy_github_file(url,save_name):
 os_tool.mkfile(root_path,*['./', 'tools', 'request_tool.py'], content=content)
 
         
-content = """'''
+content = """
+'''
 封装执行shell语句方法
 '''
 
@@ -1289,7 +1307,8 @@ def invoke(cmd):
 os_tool.mkfile(root_path,*['./', 'tools', 'shell_tool.py'], content=content)
 
         
-content = """# -*- coding:utf-8 -*-
+content = """
+# -*- coding:utf-8 -*-
 
 
 # 字典转字符串
@@ -1308,7 +1327,8 @@ def is_empty(a):
 os_tool.mkfile(root_path,*['./', 'tools', 'string_tool.py'], content=content)
 
         
-content = """#!/usr/bin/env python
+content = """
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 #__title__ = ''

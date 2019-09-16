@@ -1,6 +1,5 @@
+
 # -*- coding:utf-8 -*-
-# Author : 小吴老师
-# Data ：2019/7/11 18:31
 import os
 import shutil
 import stat
@@ -9,6 +8,7 @@ import stat
 def get_root_path():
     root_path = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)).replace('\\', '/')
     print(root_path)
+    print(root_path.find('venv'))
     if root_path.find('venv') > 0:
         root_path=root_path[:root_path.find('venv')-1]
     return root_path+'/'
@@ -35,7 +35,7 @@ def mkfile(*args,content = ""):
     path = os.path.join(*args)
     is_exists = os.path.exists(path)
     if not is_exists:
-        with open(path,'w',encoding='utf-8')as f :
+        with open(path,'w')as f :
             f.write(content)
 
 def remove(path):
@@ -75,4 +75,4 @@ def copy_file(src_file,target_dir):
     shutil.copy(src_file,target_dir)
 
 if __name__ == '__main__':
-    mkfile("E:\\softwaredata\\python\\gy-api-tool",'config','test.py')
+    mkfile("E:\softwaredata\python\gy-api-tool",'config','test.py')
