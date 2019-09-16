@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from tools import os_tool
+from tool import os_tool
 import os
 ############################
 # 初始化工程目录
@@ -141,7 +141,7 @@ def test_recharge(data):
     json_data = '''
     {
   "accountName": "xuepl1233",
-  "changeMoney": 100000
+  "changeMoney": "自动生成 数字 10,20"
 }
     '''
     files = None  # post请求，上传文件
@@ -1689,6 +1689,7 @@ content = """#!/usr/bin/env python
 #__author__ = 'xuepl'
 #__mtime__ = '2019/9/12'
 import random
+import re
 
 from tools import random_tool
 from tools.make_info import make_info
@@ -1788,18 +1789,25 @@ def get_json_data(dic,pa,d):
                 dic = dic[i]
         d[key] = dic
 
+def replace_str(s,data):
+    r = re.compile("\\${(.*?)}")
+    s_l = r.findall(s)
+    print(s_l)
+    for l in s_l:
+        s = s.replace("${"+l+"}",data[l])
+    return s
+
+
 def index_dic(d,data):
     if(isinstance(d,dict)):
         for key in d:
             if (isinstance(d[key], str)):
-                d[key].strip()
-                if(d[key].startswith("${") and d[key].endswith("}")):
-                    try:
-                        d[key] = data[d[key][2:-1]]
-                    except:
-                        pass
-                if (d[key].startswith("自动生成")):
-                    d[key] = replace_data(d[key])
+                try:
+                    d[key] = replace_str(d[key],data)
+                except:
+                    pass
+                if (d[key].find("自动生成") != -1):
+                    d[key] = replace_data(d[key].strip())
                     print(d)
             else:
                 index_dic(d[key],data)
@@ -1818,7 +1826,13 @@ def index_dic(d,data):
                 index_dic(d[i], data)
     else:
         pass
-    return d"""
+    return d
+
+if __name__ == '__main__':
+     data = {"token":"sssssss"}
+     s = "fff${token}${token}ddd"
+     s = replace_str(s,data)
+     print(s)"""
 os_tool.mkfile(root_path,*['./', 'tools', 'json_path_tool.py'], content=content)
 
         
