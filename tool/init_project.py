@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from tools import os_tool
+from tool import os_tool
 import os
 ############################
 # 初始化工程目录
@@ -9,8 +9,7 @@ root_path = os_tool.get_root_path()
 
     
 os_tool.mkdir(os.path.join(root_path,*['./', 'config']))
-content = """
-import os
+content = """import os
 
 # GY_API_URL = 'http://api.yansl.com:8084'
 GY_API_URL = 'http://qa.yansl.com:8080'
@@ -32,9 +31,28 @@ os_tool.mkfile(root_path,*['./', 'config', '__init__.py'], content=content)
 
         
 os_tool.mkdir(os.path.join(root_path,*['./', 'data']))
+content = """  expect: '200'
+  feature: null
+  files: null
+  headers: null
+  json:
+    password: '123456'
+    username: admin
+  json_path:
+  - token: $.data.token
+  method: 1
+  params: null
+  status_code: 200
+  story: null
+  title: null
+  url: /admin/login
+
+"""
+os_tool.mkfile(root_path,*['./', 'data', 'test__.yaml'], content=content)
+
+        
 os_tool.mkdir(os.path.join(root_path,*['./', 'logs']))
-content = """
-#!/usr/bin/env python
+content = """#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 #__title__ = ''
@@ -118,8 +136,7 @@ if __name__ == '__main__':
 os_tool.mkfile(root_path,*['./', 'make_test_data.py'], content=content)
 
         
-content = """
-# -*- coding:utf-8 -*-
+content = """# -*- coding:utf-8 -*-
 from tools import shell_tool
 import pytest                                                                              
                                                                                            
@@ -140,20 +157,36 @@ if __name__ == '__main__':
 os_tool.mkfile(root_path,*['./', 'run.py'], content=content)
 
         
+content = """# -*- coding: utf-8 -*-
+
+#__title__ = ''
+#__author__ = 'xuepl'
+#__mtime__ = '2019/9/16'
+
+
+# 在terminal控制台输入命令：
+# pip install --upgrade gy-api-tools
+
+
+
+"""
+os_tool.mkfile(root_path,*['./', 'sfsdfs.py'], content=content)
+
+        
 os_tool.mkdir(os.path.join(root_path,*['./', 'test_case']))
-content = """
-import pytest
+content = """import pytest
                                                        
 @pytest.fixture(scope='session')                            
 def data():
     data = {}
-    return data                                             
+    return data
+
+
 """
 os_tool.mkfile(root_path,*['./', 'test_case', 'conftest.py'], content=content)
 
         
-content = """
-import os
+content = """import os
 
 import allure
 import pytest
@@ -175,8 +208,7 @@ os_tool.mkfile(root_path,*['./', 'test_case', '__init__.py'], content=content)
 
         
 os_tool.mkdir(os.path.join(root_path,*['./', 'tools']))
-content = """
-'''
+content = """'''
 封装Assert方法
 
 '''
@@ -250,8 +282,7 @@ def assert_not_null(actual):
 os_tool.mkfile(root_path,*['./', 'tools', 'assert_tool.py'], content=content)
 
         
-content = """
-'''
+content = """'''
 常用装饰器
 '''
 import allure
@@ -278,8 +309,7 @@ def logs(func):
 os_tool.mkfile(root_path,*['./', 'tools', 'decorators_tool.py'], content=content)
 
         
-content = """
-#!/usr/bin/env python
+content = """#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 #__title__ = ''
@@ -322,8 +352,7 @@ def get_datas(dir_path):
 os_tool.mkfile(root_path,*['./', 'tools', 'get_data.py'], content=content)
 
         
-content = """
-#!/usr/bin/env python
+content = """#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 #__title__ = ''
@@ -462,8 +491,7 @@ def index_dic(d,data):
 os_tool.mkfile(root_path,*['./', 'tools', 'json_path_tool.py'], content=content)
 
         
-content = """
-import logging
+content = """import logging
 from logging.handlers import TimedRotatingFileHandler
 from tools import os_tool
 '''
@@ -517,8 +545,7 @@ def critical(msg):
 os_tool.mkfile(root_path,*['./', 'tools', 'log_tool.py'], content=content)
 
         
-content = """
-#! /usr/bin/env python
+content = """#! /usr/bin/env python
 # -*- coding: utf-8 -*-
 import datetime
 import random
@@ -612,8 +639,7 @@ def make_info():
 os_tool.mkfile(root_path,*['./', 'tools', 'make_info.py'], content=content)
 
         
-content = """
-# -*- coding:utf-8 -*-
+content = """# -*- coding:utf-8 -*-
 # Author : 小吴老师
 # Data ：2019/7/21 14:53
 import hashlib
@@ -629,8 +655,7 @@ def md5_passwd(str,key='123456'):
 os_tool.mkfile(root_path,*['./', 'tools', 'md5_tool.py'], content=content)
 
         
-content = """
-#! /usr/bin/env python
+content = """#! /usr/bin/env python
 # -*- coding: utf-8 -*-
 import json
 
@@ -705,8 +730,7 @@ if __name__=='__main__':
 os_tool.mkfile(root_path,*['./', 'tools', 'mysql_tool.py'], content=content)
 
         
-content = """
-# -*- coding:utf-8 -*-
+content = """# -*- coding:utf-8 -*-
 import os
 import shutil
 import stat
@@ -786,8 +810,7 @@ if __name__ == '__main__':
 os_tool.mkfile(root_path,*['./', 'tools', 'os_tool.py'], content=content)
 
         
-content = """
-    
+content = """    
 # -*- coding:utf-8 -*-
 
 
@@ -1054,8 +1077,7 @@ def random_gbk_chines():
 os_tool.mkfile(root_path,*['./', 'tools', 'random_tool.py'], content=content)
 
         
-content = """
-#!/usr/bin/env python
+content = """#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 #__title__ = ''
@@ -1079,24 +1101,21 @@ from tools.string_tool import is_empty
 def request_tamp(d,data):
     feature = d.pop("feature")
     if not is_empty(feature):
-        print(feature)
         allure.dynamic.feature(feature)
     story = d.pop("story")
     if not is_empty(story):
-        print(story)
         allure.dynamic.story(story)
     title = d.pop("title")
     if not is_empty(title):
-        print(title)
         allure.dynamic.title(title)
     status_code = d.pop("status_code")
     method = d.pop("method")
     json_path = d.pop("json_path")
-    d["url"] = conf.GY_API_URL + d["url"]
     try:
         index_dic(d,data)
     except:
         pass
+    d["url"] = conf.GY_API_URL + d["url"]
     expect = d.pop("expect")
     if(method==1):
         resp = request_tool.post_request(**d)
@@ -1117,8 +1136,7 @@ def request_tamp(d,data):
 os_tool.mkfile(root_path,*['./', 'tools', 'request_tamp.py'], content=content)
 
         
-content = """
-'''
+content = """'''
 封装request
 '''
 
@@ -1128,7 +1146,7 @@ from tools.decorators_tool import logs
 import time
 
 @logs
-def get_request(url, params=None, headers=None, cookies=None):
+def get_request(*args,**kwargs):
     '''
     Get请求
     :param url:
@@ -1137,20 +1155,18 @@ def get_request(url, params=None, headers=None, cookies=None):
     :return:
     '''
 
-    if not (url.startswith('http://') or url.startswith('https://')):
-        url = '%s%s' % ('http://', url)
-        print(url)
+
     try:
 
-        response = requests.get(url=url, params=params, headers=headers, cookies=cookies)
+        response = requests.get(*args,**kwargs)
 
     except requests.RequestException as e:
-        log_tool.error('%s%s' % ('Exception url: ', url))
+        log_tool.error('%s%s' % ('Exception url: ', kwargs['url']))
         log_tool.error(e)
         return ()
 
     except Exception as e:
-        log_tool.error('%s%s' % ('Exception url: ', url))
+        log_tool.error('%s%s' % ('Exception url: ',kwargs['url']))
         return ()
 
     time_consuming = response.elapsed.microseconds / 1000
@@ -1160,7 +1176,7 @@ def get_request(url, params=None, headers=None, cookies=None):
 
 
 @logs
-def post_request(url, data=None,files=None, params=None, headers=None, json=None, cookies=None):
+def post_request(*args,**kwargs):
     '''
     Post请求
     :param url:
@@ -1168,19 +1184,17 @@ def post_request(url, data=None,files=None, params=None, headers=None, json=None
     :param header:
     :return:
     '''
-    if not (url.startswith('http://') or url.startswith('https://')):
-        url = '%s%s' % ('http://', url)
-        print(url)
+
     try:
-        response = requests.post(url, data=data,files=files, params=params, headers=headers, json=json, cookies=cookies)
+        response = requests.post(*args,**kwargs)
 
     except requests.RequestException as e:
-        log_tool.error('%s%s' % ('RequestException url: ', url))
+        log_tool.error('%s%s' % ('RequestException url: ',kwargs['url']))
         log_tool.error(e)
         return ()
 
     except Exception as e:
-        log_tool.error('%s%s' % ('Exception url: ', url))
+        log_tool.error('%s%s' % ('Exception url: ', kwargs['url']))
         log_tool.error(e)
         return ()
 
@@ -1192,7 +1206,7 @@ def post_request(url, data=None,files=None, params=None, headers=None, json=None
 
 
 @logs
-def post_request_multipart(url, files=None, headers=None, cookies=None):
+def post_request_multipart(*args,**kwargs):
     '''
     提交Multipart/form-data 格式的Post请求
     :param url:
@@ -1203,10 +1217,8 @@ def post_request_multipart(url, files=None, headers=None, cookies=None):
     :param type:
     :return:
     '''
-    if not (url.startswith('http://') or url.startswith('https://')):
-        url = '%s%s' % ('http://', url)
-        print(url)
-    response = requests.post(url=url, files=files, headers=headers, cookies=cookies)
+
+    response = requests.post(*args,**kwargs)
     # time_consuming为响应时间，单位为毫秒
     time_consuming = response.elapsed.microseconds / 1000
     log_tool.info('----请求用时: %s 秒数' % time_consuming)
@@ -1215,7 +1227,7 @@ def post_request_multipart(url, files=None, headers=None, cookies=None):
 
 
 @logs
-def put_request(url, data, header=None, cookies=None):
+def put_request(*args,**kwargs):
     '''
     Put请求
     :param url:
@@ -1223,23 +1235,17 @@ def put_request(url, data, header=None, cookies=None):
     :param header:
     :return:
     '''
-    if not (url.startswith('http://') or url.startswith('https://')):
-        url = '%s%s' % ('http://', url)
-        log_tool.debug(url)
 
     try:
-        if data is None:
-            response = requests.put(url=url, headers=header, cookies=cookies)
-        else:
-            response = requests.put(url=url, params=data, headers=header, cookies=cookies)
 
+        response = requests.put(*args,**kwargs)
     except requests.RequestException as e:
-        log_tool.error('%s%s' % ('RequestException url: ', url))
+        log_tool.error('%s%s' % ('RequestException url: ', kwargs['url']))
         log_tool.error(e)
         return ()
 
     except Exception as e:
-        print('%s%s' % ('Exception url: ', url))
+        print('%s%s' % ('Exception url: ', kwargs['url']))
         print(e)
         return ()
 
@@ -1282,8 +1288,7 @@ def copy_github_file(url,save_name):
 os_tool.mkfile(root_path,*['./', 'tools', 'request_tool.py'], content=content)
 
         
-content = """
-'''
+content = """'''
 封装执行shell语句方法
 '''
 
@@ -1307,8 +1312,7 @@ def invoke(cmd):
 os_tool.mkfile(root_path,*['./', 'tools', 'shell_tool.py'], content=content)
 
         
-content = """
-# -*- coding:utf-8 -*-
+content = """# -*- coding:utf-8 -*-
 
 
 # 字典转字符串
@@ -1327,8 +1331,7 @@ def is_empty(a):
 os_tool.mkfile(root_path,*['./', 'tools', 'string_tool.py'], content=content)
 
         
-content = """
-#!/usr/bin/env python
+content = """#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 #__title__ = ''

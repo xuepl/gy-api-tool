@@ -35,7 +35,7 @@ def mkfile(*args,content = ""):
     path = os.path.join(*args)
     is_exists = os.path.exists(path)
     if not is_exists:
-        with open(path,'w')as f :
+        with open(path,'w',encoding='utf-8')as f :
             f.write(content)
 
 def remove(path):

@@ -9,7 +9,7 @@ from distutils.core import setup
 
 setup(
     name="gy-api-tools",  # 这里是pip项目发布的名称
-    version="1.1.1",  # 版本号，数值大的会优先被pip
+    version="1.1.3",  # 版本号，数值大的会优先被pip
     keywords=["init", "auto-test"],
     description="to simplify auto test",
     long_description="A init package,to simplify develope auto test",
@@ -18,7 +18,7 @@ setup(
     url="https://github.com/xuepl/gy-api-tool",  # 项目相关文件地址，一般是github
     author="xuepl",
     author_email="xuepl@guoyasoft.com",
-    packages=['tools'],
+    packages=['tool'],
     platforms="python",
     install_requires=[
         'pinyin==0.4.0',
