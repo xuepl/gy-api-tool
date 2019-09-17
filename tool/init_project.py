@@ -1790,9 +1790,8 @@ def get_json_data(dic,pa,d):
         d[key] = dic
 
 def replace_str(s,data):
-    r = re.compile("\\${(.*?)}")
+    r = re.compile(r"\\${(.*?)}")
     s_l = r.findall(s)
-    print(s_l)
     for l in s_l:
         s = s.replace("${"+l+"}",data[l])
     return s
