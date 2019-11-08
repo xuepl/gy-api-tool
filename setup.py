@@ -9,7 +9,7 @@ from distutils.core import setup
 
 setup(
     name="gy-api-tools",  # 这里是pip项目发布的名称
-    version="1.1.6",  # 版本号，数值大的会优先被pip
+    version="1.2.3",  # 版本号，数值大的会优先被pip
     keywords=["init", "auto-test"],
     description="to simplify auto test",
     long_description="A init package,to simplify develope auto test",
@@ -26,6 +26,10 @@ setup(
         'requests==2.22.0',
         'PyYAML==5.1.2',
         'allure-pytest==2.7.0',
-        'pytest==5.0.1'
+        'pytest==5.0.1',
+        'zipp==0.6.0',
+        'xlwt==1.3.0',
+        'xlrd==1.2.0'
+
     ]
 )

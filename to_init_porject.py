@@ -52,7 +52,7 @@ os_tool.mkdir(os.path.join(root_path,*{}))""".format(dir)
 def mk_project(content):
     content["c"] += """#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-from tools import os_tool
+from tool import os_tool
 import os
 ############################
 # 初始化工程目录
