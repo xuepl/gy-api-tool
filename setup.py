@@ -24,7 +24,7 @@ setup(
         'pinyin==0.4.0',
         'PyMySQL==0.9.3',
         'requests==2.22.0',
-        'PyYAML==5.1.2',
+        'PyYAML==5.4',
         'allure-pytest==2.7.0',
         'pytest==5.0.1',
         'zipp==0.6.0',
